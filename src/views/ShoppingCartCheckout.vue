@@ -13,6 +13,7 @@
       :current-step="currentStep"
       :shipping-fee-selected="user.shippingFee"
       :initial-total-price="user.totalPrice"
+      :initial-cards-count="user.cardsCount"
     />
   </main>
 </template>
@@ -47,10 +48,11 @@ export default {
         expdate: "",
         cvv: "",
         totalPrice: 5298,
+        cardsCount: [],
       },
     };
   },
-  created() {    
+  created() {
     this.user = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
       ...this.user,
     };
@@ -62,8 +64,11 @@ export default {
     },
     handleFormAfterSubmit() {
       const getResults = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      console.log(getResults)          
-      for (const [key, value] of Object.entries(getResults)) {        
+
+      for (const [key, value] of Object.entries(getResults)) {
+        if (key === "cardsCount") {
+          return;
+        }
         console.log(`${key}: ${value}`);
       }
     },

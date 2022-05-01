@@ -54,7 +54,11 @@ export default {
       required: true,
     },
     initialTotalPrice: {
-      type: String,
+      type: Number,
+      required: true,
+    },
+    initialCardsCount: {
+      type: Array,
       required: true,
     },
   },
@@ -82,6 +86,7 @@ export default {
   },
   created() {
     this.totalPrice = Number(this.initialTotalPrice);
+    this.updateCardsCount();
   },
   methods: {
     handleCount(btn, id) {
@@ -102,7 +107,7 @@ export default {
         }
         return card;
       });
-    },    
+    },
     shippingFeeAdd() {
       const targetFee = Number(this.shippingFeeSelected);
       if (targetFee === 0) {
@@ -116,14 +121,36 @@ export default {
     },
     saveStorage() {
       const getStorage = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({ ...getStorage, totalPrice: this.totalPrice })
-      );
+      const newStorage = {
+        ...getStorage,
+        totalPrice: this.totalPrice,
+        cardsCount: this.getCardsCount(),
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newStorage));
+    },
+    getCardsCount() {
+      const cardsCount = this.cards.map((card) => {
+        const { id, count } = card;
+        card = {
+          id,
+          count,
+        };
+        return card;
+      });
+      return cardsCount;
+    },
+    updateCardsCount() {
+      for (let i = 0; i < this.cards.length; i++) {
+        for (let i = 0; i < this.initialCardsCount.length; i++) {
+          if (this.cards[i].id === this.initialCardsCount[i].id) {
+            this.cards[i].count = this.initialCardsCount[i].count;
+          }
+        }
+      }
     },
   },
   watch: {
-    totalPrice() {      
+    totalPrice() {
       this.saveStorage();
     },
     shippingFeeSelected() {

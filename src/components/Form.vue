@@ -128,11 +128,12 @@
           />
         </div>
         <div class="form-row form-row-number">
-          <label for="cccode">卡號</label>
+          <label for="cardnumber">卡號</label>
           <input
+            v-model="user.cardnumber"
             type="text"
-            name="cccode"
-            id="cccode"
+            name="cardnumber"
+            id="cardnumber"
             placeholder="1111 2222 3333 4444"
           />
         </div>
